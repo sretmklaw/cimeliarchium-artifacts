@@ -1,0 +1,31 @@
+plugins {
+    id 'base'
+}
+
+group = 'org.cimeliarchium'
+version = '0.0.1'
+
+task buildWithArtifacts(type : Zip) {
+    dependsOn clean
+    from './src/main/resources'
+    include '**/*'
+    archiveName = 'cimeliarchium-artifacts.jar'
+    destinationDir = file("${buildDir}")
+}
+
+def myArtifacts = artifacts.add('default', buildWithArtifacts) {
+    name = 'cimeliarchium-artifacts'
+}
+
+apply plugin: 'maven-publish'
+publishing {
+    repositories {
+        maven { url = 'file://C:/tmp/' }
+    }
+    publications {
+        myPub(MavenPublication) {
+            artifactId myArtifacts.name
+            artifact myArtifacts
+        }
+    }
+}
